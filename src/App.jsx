@@ -1,35 +1,104 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import Posts from './components/Post';
+import AddPost from './components/AddPost';
+import axios from 'axios';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null); // post I am editing
+  const [error, setError] = useState(null);
+
+  const handleAddPost = async (newPost) => {
+    try {
+      const id = posts.length > 0 ? Number(posts[posts.length - 1].id) + 1 : 1;
+      const finalPost = {
+        id: id.toString(),
+        ...newPost
+      }
+
+      const response = await axios.post('http://localhost:8000/posts', finalPost);
+      setPosts([...posts, response.data]);
+
+    } catch (error) {
+      setError(error.message)
+    }
+  }
+
+
+  const handleDeletePost = async (postId) => {
+    if (confirm("Are you sure you want to delete the post?")) {
+      try {
+        await axios.delete(`http://localhost:8000/posts/${postId}`);
+        const currentPosts = posts.filter(post => post.id !== postId);
+        setPosts(currentPosts)
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  }
+
+
+  const handleEditPost = async (updatedPost) => {
+    try {
+      const response = await axios.patch(`http://localhost:8000/posts/${updatedPost.id}`, updatedPost);
+
+      setPosts(posts => (
+        posts.map(post => post.id === response.data.id ? response.data : post)
+      ))
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/posts`);
+
+        if (response && response.data) {
+          setPosts(response.data);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchPosts();
+  }, [])
 
   return (
-    <>
+    <div>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>API Request with Axios</h1>
+        <hr />
+
+        <div>
+          <Posts
+            posts={posts}
+            onDeletePost={handleDeletePost}
+            onEditClick={setSelectedPost}
+          />
+
+          <hr />
+
+          {!selectedPost ? (
+            <AddPost onAddPost={handleAddPost} />
+          ) : (
+            <EditPost post={selectedPost} onEditPost={handleEditPost} />
+          )}
+
+          {error && (
+            <>
+              <hr />
+              <div className="error">{error}</div>
+            </>
+          )}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
 export default App
