@@ -5,6 +5,7 @@ const AddPost = ({ onAddPost }) => {
         title: "",
         body: "",
     });
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,6 +21,9 @@ const AddPost = ({ onAddPost }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!form.title.trim() || !form.body.trim()) return;
+
+        // console.log(form, 'input value');
+        
 
         onAddPost(form);
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import './App.css'
 import Posts from './components/Post';
 import AddPost from './components/AddPost';
 import axios from 'axios';
