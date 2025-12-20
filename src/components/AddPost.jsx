@@ -1,11 +1,15 @@
 import { useState } from 'react';
 
-const AddPost = ({ onAddPost }) => {
-    const [form, setForm] = useState({
+const AddPost = ({ onAddPost, selectedPost, onEditPost }) => {
+    const [form, setForm] = useState(selectedPost || {
         title: "",
         body: "",
     });
-    
+
+    const isEdit = Boolean(selectedPost)
+    // console.log("Edit status", isEdit);
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,16 +26,14 @@ const AddPost = ({ onAddPost }) => {
         e.preventDefault();
         if (!form.title.trim() || !form.body.trim()) return;
 
-        // console.log(form, 'input value');
-        
-
-        onAddPost(form);
-
+       isEdit ? onEditPost(form) : onAddPost(form);
+       
         setForm({
             title: "",
             body: "",
         })
     }
+
 
     return (
         <div>
@@ -58,9 +60,9 @@ const AddPost = ({ onAddPost }) => {
                     />
                 </p>
 
-                <div>
-                    <input title='Submit' type="submit" disabled={!isValid} />
-                </div>
+                <button type="submit" disabled={!isValid}>
+                    {isEdit ? "Update Post" : "Add Post"}
+                </button>
             </form>
         </div>
     );

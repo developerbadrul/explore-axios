@@ -1,4 +1,4 @@
-export default function Posts({ posts, onDeletePost, onEditClick }) {
+export default function Posts({ posts, onDeletePost, onEditSelect }) {
     return (
         <div>
             <h2>All Posts</h2>
@@ -12,7 +12,7 @@ export default function Posts({ posts, onDeletePost, onEditClick }) {
                                 <span onClick={() => onDeletePost(post.id)}>
                                     ❌
                                 </span>
-                                <span onClick={() => onEditClick(post)}>
+                                <span onClick={() => onEditSelect(post)}>
                                     ✏️
                                 </span>
                             </div>

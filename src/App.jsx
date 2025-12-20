@@ -8,7 +8,7 @@ import axios from 'axios';
 function App() {
 
   const [posts, setPosts] = useState([]);
-  const [selectedPost, setSelectedPost] = useState(null); // post I am editing
+  const [selectedPost, setSelectedPost] = useState(null);
   const [error, setError] = useState(null);
 
   const handleAddPost = async (newPost) => {
@@ -26,6 +26,8 @@ function App() {
       setError(error.message)
     }
   }
+
+  console.log(selectedPost, 'Edit post');
 
 
   const handleDeletePost = async (postId) => {
@@ -48,6 +50,8 @@ function App() {
       setPosts(posts => (
         posts.map(post => post.id === response.data.id ? response.data : post)
       ))
+
+      setSelectedPost(null)
     } catch (err) {
       setError(err.message);
     }
@@ -79,16 +83,29 @@ function App() {
           <Posts
             posts={posts}
             onDeletePost={handleDeletePost}
-            onEditClick={setSelectedPost}
+            onEditSelect={setSelectedPost}
           />
 
           <hr />
 
-          {!selectedPost ? (
-            <AddPost onAddPost={handleAddPost} />
-          ) : (
-            <EditPost post={selectedPost} onEditPost={handleEditPost} />
-          )}
+
+          <AddPost
+            key={selectedPost ? selectedPost.id : 'new'}
+            onAddPost={handleAddPost}
+            selectedPost={selectedPost}
+            onEditPost={handleEditPost}
+          />
+
+          {/* {
+            selectedPost && (
+              <AddPost
+                onAddPost={handleAddPost}
+                selectedPost={selectedPost}
+                onEditPost={handleEditPost}
+              />
+            )
+          } */}
+
 
           {error && (
             <>
