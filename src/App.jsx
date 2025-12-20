@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Posts from './components/Post';
-import AddPost from './components/AddPost';
 import axios from 'axios';
+import AddEditPost from './components/AddPost';
 
 
 function App() {
@@ -26,8 +26,6 @@ function App() {
       setError(error.message)
     }
   }
-
-  console.log(selectedPost, 'Edit post');
 
 
   const handleDeletePost = async (postId) => {
@@ -89,23 +87,12 @@ function App() {
           <hr />
 
 
-          <AddPost
+          <AddEditPost
             key={selectedPost ? selectedPost.id : 'new'}
             onAddPost={handleAddPost}
             selectedPost={selectedPost}
             onEditPost={handleEditPost}
           />
-
-          {/* {
-            selectedPost && (
-              <AddPost
-                onAddPost={handleAddPost}
-                selectedPost={selectedPost}
-                onEditPost={handleEditPost}
-              />
-            )
-          } */}
-
 
           {error && (
             <>

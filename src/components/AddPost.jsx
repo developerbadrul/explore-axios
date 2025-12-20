@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const AddPost = ({ onAddPost, selectedPost, onEditPost }) => {
+const AddEditPost = ({ onAddPost, selectedPost, onEditPost }) => {
     const [form, setForm] = useState(selectedPost || {
         title: "",
         body: "",
@@ -27,7 +27,7 @@ const AddPost = ({ onAddPost, selectedPost, onEditPost }) => {
         if (!form.title.trim() || !form.body.trim()) return;
 
        isEdit ? onEditPost(form) : onAddPost(form);
-       
+
         setForm({
             title: "",
             body: "",
@@ -68,4 +68,4 @@ const AddPost = ({ onAddPost, selectedPost, onEditPost }) => {
     );
 };
 
-export default AddPost;
+export default AddEditPost;
